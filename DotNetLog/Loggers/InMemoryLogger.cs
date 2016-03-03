@@ -7,7 +7,7 @@ namespace DotNetLog.Loggers
 {
     public class InMemoryLogger : ILogger
     {
-        public static List<ILogEntry> LogEntries { get; } = new List<ILogEntry>();
+        private static List<ILogEntry> LogEntries { get; } = new List<ILogEntry>();
 
         public void Log(ILogEntry logEntry)
         {
@@ -19,10 +19,10 @@ namespace DotNetLog.Loggers
             return LogEntries.FindAll(x => x.LogTime - DateTime.Now <= timeSpan);
         }
 
-        public ICollection<ILogEntry> GetLogsByType(Type logType, TimeSpan timeSpan)
+        public ICollection<ILogEntry> GetLogsByTypeFromPeriod(LogType logType, TimeSpan timeSpan)
         {
             return LogEntries
-                .FindAll(x => x.GetType() == logType)
+                .FindAll(x => x.LogType == logType)
                 .FindAll(x => x.LogTime - DateTime.Now <= timeSpan);
         }
 

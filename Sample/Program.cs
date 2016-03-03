@@ -1,5 +1,6 @@
 ﻿using System;
-using DotNetLog.LogEntries;
+using DotNetLog;
+using DotNetLog.ILoggers;
 using DotNetLog.Loggers;
 
 namespace Sample
@@ -8,17 +9,15 @@ namespace Sample
     {
         static void Main(string[] args)
         {
-            InMemoryLogger logger = new InMemoryLogger();
-            logger.Log(new LogInfo("pierwszy log"));
-            logger.Log(new LogWarning("drugi log"));
-            logger.Log(new LogInfo("trzeci log", new NullReferenceException()));
-            logger.Log(new LogError("czwarty log", new ArgumentNullException()));
+            ILogger logger = new FileLogger();
 
-            foreach (var logEntry in InMemoryLogger.LogEntries)
+            var logs = logger.GetLogsFromPeriod(new TimeSpan(0, 1, 0, 0));
+
+            int j = 0;
+            foreach (var logEntry in logs)
             {
-                Console.WriteLine(logEntry);
+                Console.WriteLine($"Log no:{++j}; Date: {logEntry.LogTime}, Exception: {logEntry.LoggedException}");
             }
-
             Console.ReadKey();
         }
     }

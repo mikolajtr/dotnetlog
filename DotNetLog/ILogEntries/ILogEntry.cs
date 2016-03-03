@@ -1,5 +1,4 @@
 ﻿using System;
-using DotNetLog.LogEntries;
 
 namespace DotNetLog.ILogEntries
 {

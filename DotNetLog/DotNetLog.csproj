@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,15 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ILogEntries\ILogEntry.cs" />
-    <Compile Include="ILogEntries\ILogError.cs" />
-    <Compile Include="ILogEntries\ILogInfo.cs" />
-    <Compile Include="ILogEntries\ILogWarning.cs" />
     <Compile Include="LogEntries\LogEntry.cs" />
-    <Compile Include="LogEntries\LogError.cs" />
-    <Compile Include="LogEntries\LogInfo.cs" />
+    <Compile Include="Loggers\FileLogger.cs" />
     <Compile Include="Loggers\InMemoryLogger.cs" />
     <Compile Include="LogType.cs" />
-    <Compile Include="LogEntries\LogWarning.cs" />
     <Compile Include="ILoggers\ILogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
