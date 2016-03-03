@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using DotNetLog.LogEntries;
-using DotNetLog.Loggers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LogTests
 {

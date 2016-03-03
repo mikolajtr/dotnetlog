@@ -10,7 +10,19 @@ namespace DotNetLog.Loggers
 {
     public class FileLogger : ILogger
     {
-        public FileLogger()
+        private static FileLogger _instance;
+
+        public static FileLogger GetLoggerInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new FileLogger();
+            }
+
+            return _instance;
+        }
+
+        private FileLogger()
         {
             _filePath = ConfigurationManager.AppSettings["LogFilePath"];
         }
@@ -41,10 +53,10 @@ namespace DotNetLog.Loggers
 
         public ICollection<ILogEntry> GetAllLogs()
         {
-            string line;
             List<ILogEntry> logEntries= new List<ILogEntry>();
             using (var logFile = new StreamReader(_filePath))
             {
+                string line;
                 while ((line = logFile.ReadLine()) != null)
                 {
                     logEntries.Add(new LogEntry(line));
