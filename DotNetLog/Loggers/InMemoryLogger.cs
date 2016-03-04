@@ -7,6 +7,18 @@ namespace DotNetLog.Loggers
 {
     public class InMemoryLogger : ILogger
     {
+        private static InMemoryLogger _instance;
+
+        public static InMemoryLogger GetLoggerInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new InMemoryLogger();
+            }
+
+            return _instance;
+        }
+
         private static List<ILogEntry> LogEntries { get; } = new List<ILogEntry>();
 
         public void Log(ILogEntry logEntry)

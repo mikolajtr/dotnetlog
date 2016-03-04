@@ -37,12 +37,13 @@ namespace DotNetLog.LogEntries
 
         public override string ToString()
         {
-            return $"{LogTime} | {LogType} | {Message} | {LoggedException}";
+            string logPattern = ConfigurationManager.AppSettings["LogPattern"];
+            return String.Format(logPattern, LogTime, LogType, Message, LoggedException);
         }
 
         private void FromString(string record)
         {
-            string pattern = ConfigurationManager.AppSettings["LogPattern"];
+            string pattern = ConfigurationManager.AppSettings["LogRegexPattern"];
             Match match = Regex.Match(record, pattern);
             DateTime logTime = DateTime.Parse(match.Groups[1].Value);
             LogType logType = (LogType)Enum.Parse(typeof(LogType), match.Groups[2].Value);

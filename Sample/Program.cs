@@ -1,5 +1,7 @@
 ﻿using System;
+using DotNetLog;
 using DotNetLog.ILoggers;
+using DotNetLog.LogEntries;
 using DotNetLog.Loggers;
 
 namespace Sample
@@ -9,14 +11,9 @@ namespace Sample
         static void Main(string[] args)
         {
             ILogger logger = FileLogger.GetLoggerInstance();
+            logger.Log(new LogEntry("Sample log of new formatting", LogType.Info));
+            logger.Log(new LogEntry("Sample log error of new formatting", LogType.Error, new ArgumentException()));
 
-            var logs = logger.GetLogsFromPeriod(new TimeSpan(0, 9, 10, 0));
-
-            int j = 0;
-            foreach (var logEntry in logs)
-            {
-                Console.WriteLine($"Log no:{++j}; Date: {logEntry.LogTime}, Exception: {logEntry.LoggedException}");
-            }
             Console.ReadKey();
         }
     }
