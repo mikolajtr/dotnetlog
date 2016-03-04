@@ -25,6 +25,10 @@ namespace DotNetLog.Loggers
         private FileLogger()
         {
             _filePath = ConfigurationManager.AppSettings["LogFilePath"];
+            if (_filePath == null)
+            {
+                _filePath = "log.txt";
+            }
         }
 
         private List<ILogEntry> LogEntries { get { return (List<ILogEntry>) GetAllLogs(); } } 

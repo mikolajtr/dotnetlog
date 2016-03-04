@@ -38,12 +38,22 @@ namespace DotNetLog.LogEntries
         public override string ToString()
         {
             string logPattern = ConfigurationManager.AppSettings["LogPattern"];
+            if (logPattern == null)
+            {
+                logPattern = "{0} | {1} | {2} | {3}";
+            }
+
             return String.Format(logPattern, LogTime, LogType, Message, LoggedException);
         }
 
         private void FromString(string record)
         {
             string pattern = ConfigurationManager.AppSettings["LogRegexPattern"];
+            if (pattern == null)
+            {
+                pattern = @"(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d) \| (\w*) \| (.*) \| (.*)";
+            }
+
             Match match = Regex.Match(record, pattern);
             DateTime logTime = DateTime.Parse(match.Groups[1].Value);
             LogType logType = (LogType)Enum.Parse(typeof(LogType), match.Groups[2].Value);
