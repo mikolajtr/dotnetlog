@@ -8,7 +8,7 @@ namespace DotNetLog.Loggers
     public sealed class InMemoryLogger : ILogger
     {
         private static volatile InMemoryLogger _instance;
-        private static object syncRoot = new Object();
+        private static readonly object SyncRoot = new Object();
 
         public static InMemoryLogger Instance
         {
@@ -16,7 +16,7 @@ namespace DotNetLog.Loggers
             {
                 if (_instance == null)
                 {
-                    lock (syncRoot)
+                    lock (SyncRoot)
                     {
                         if (_instance == null)
                         {
