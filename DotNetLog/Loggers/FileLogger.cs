@@ -8,11 +8,28 @@ using DotNetLog.LogEntries;
 
 namespace DotNetLog.Loggers
 {
-    public class FileLogger : ILogger
+    public sealed class FileLogger : ILogger
     {
-        private static FileLogger _instance = new FileLogger();
+        private static volatile FileLogger _instance;
+        private static object syncRoot = new Object();
 
-        public static FileLogger Instance { get { return _instance; } }
+        public static FileLogger Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new FileLogger();
+                        }
+                    }
+                }
+                return _instance;
+            }
+        }
 
         private FileLogger()
         {

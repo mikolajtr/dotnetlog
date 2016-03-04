@@ -5,11 +5,28 @@ using DotNetLog.ILoggers;
 
 namespace DotNetLog.Loggers
 {
-    public class InMemoryLogger : ILogger
+    public sealed class InMemoryLogger : ILogger
     {
-        private static InMemoryLogger _instance = new InMemoryLogger();
+        private static volatile InMemoryLogger _instance;
+        private static object syncRoot = new Object();
 
-        public static InMemoryLogger Instance { get { return _instance; } }
+        public static InMemoryLogger Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new InMemoryLogger();
+                        }
+                    }
+                }
+                return _instance;
+            }
+        }
 
         private static List<ILogEntry> LogEntries { get; } = new List<ILogEntry>();
 
