@@ -10,7 +10,7 @@ namespace Sample
     {
         static void Main(string[] args)
         {
-            ILogger logger = FileLogger.GetLoggerInstance(); // Get instance of logger. Logger is singleton, you can't create it directly.
+            ILogger logger = FileLogger.Instance; // Get instance of logger. Logger is singleton, you can't create it directly.
 
             logger.Log(new LogEntry("Sample log.", LogType.Info)); // Log new info log.
             logger.Log(new LogEntry("Sample log error.", LogType.Error, new Exception("Error!"))); // Log new error log and log exception. Do not forget to rethrow it in try/catch block!

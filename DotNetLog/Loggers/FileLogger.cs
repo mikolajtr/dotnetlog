@@ -10,17 +10,9 @@ namespace DotNetLog.Loggers
 {
     public class FileLogger : ILogger
     {
-        private static FileLogger _instance;
+        private static FileLogger _instance = new FileLogger();
 
-        public static FileLogger GetLoggerInstance()
-        {
-            if (_instance == null)
-            {
-                _instance = new FileLogger();
-            }
-
-            return _instance;
-        }
+        public static FileLogger Instance { get { return _instance; } }
 
         private FileLogger()
         {
