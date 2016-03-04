@@ -30,7 +30,7 @@ For saving logs, there are two example implementations of `ILogger`:
  - `FileLogger` - saves given logs in file. Log file path should be saved in your application `App.config` file, under `LogFilePath` key. Default log file `log.txt` will be created in your app main directory;
  - `InMemoryLogger` - saves logs in static list stored in application memory. When program is closed, logs are destroyed. Do NOT use this logger to things other than debugging!
 
-Both `FileLogger` and `InMemoryLogger` are singletons - there is only one instance of logger for application. To get to instance, you have use `Instance` property of logger.
+Both `FileLogger` and `InMemoryLogger` are singletons - there is only one instance of logger for application. To get to instance, you have to use `Instance` property of logger.
 
 Example of using log system with `FileLogger` is within Sample console app in this solution. Run it or check example below:
     using System;
