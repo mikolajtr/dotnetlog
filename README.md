@@ -30,6 +30,8 @@ For saving logs, there are two example implementations of `ILogger`:
  - `FileLogger` - saves given logs in file. Log file path should be saved in your application `App.config` file, under `LogFilePath` key. Default log file `log.txt` will be created in your app main directory;
  - `InMemoryLogger` - saves logs in static list stored in application memory. When program is closed, logs are destroyed. Do NOT use this logger to things other than debugging!
 
+Both `FileLogger` and `InMemoryLogger` are singletons - there is only one instance of logger for application. To get to instance, you have to use `Instance` property of logger.
+
 Example of using log system with `FileLogger` is within Sample console app in this solution. Run it or check example below:
     using System;
     using DotNetLog;
@@ -43,7 +45,7 @@ Example of using log system with `FileLogger` is within Sample console app in th
         {
             static void Main(string[] args)
             {
-                ILogger logger = FileLogger.GetLoggerInstance(); // Get instance of logger. Logger is singleton, you can't create it directly.
+                ILogger logger = FileLogger.Instance; // Get instance of logger. Logger is singleton, you can't create it directly.
     
                 logger.Log(new LogEntry("Sample log.", LogType.Info)); // Log new info log.
                 logger.Log(new LogEntry("Sample log error.", LogType.Error, new Exception("Error!"))); // Log new error log and log exception. Do not forget to rethrow it in try/catch block!
