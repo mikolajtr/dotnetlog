@@ -13,7 +13,10 @@ namespace DotNetLog.Loggers
     {
         private static volatile FileLogger _instance;
         private static readonly object SyncRoot = new Object();
-
+        private List<ILogEntry> LogEntries { get { return (List<ILogEntry>)GetAllLogs(); } }
+        private readonly Dictionary<Type, string> _readLogExceptions;
+        private readonly Dictionary<Type, string> _writeLogExceptions;
+        private readonly string _filePath;
         public static FileLogger Instance
         {
             get
@@ -61,14 +64,6 @@ namespace DotNetLog.Loggers
                 _filePath = "log.txt";
             }
         }
-
-        private List<ILogEntry> LogEntries { get { return (List<ILogEntry>) GetAllLogs(); } }
-
-        private Dictionary<Type, string> _readLogExceptions;
-
-        private Dictionary<Type, string> _writeLogExceptions;
-         
-        private readonly string _filePath;
 
         public void Log(ILogEntry logEntry)
         {
