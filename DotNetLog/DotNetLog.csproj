@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\LoggingException.cs" />
     <Compile Include="ILogEntries\ILogEntry.cs" />
     <Compile Include="LogEntries\LogEntry.cs" />
     <Compile Include="Loggers\FileLogger.cs" />

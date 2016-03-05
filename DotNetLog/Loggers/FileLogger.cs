@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using DotNetLog.Exceptions;
 using DotNetLog.ILogEntries;
 using DotNetLog.ILoggers;
 using DotNetLog.LogEntries;
@@ -33,6 +34,27 @@ namespace DotNetLog.Loggers
 
         private FileLogger()
         {
+            _writeLogExceptions = new Dictionary<Type, string>
+            {
+                { typeof(UnauthorizedAccessException), "You don't have permission to create log file." },
+                { typeof(ArgumentException), "Invalid log file path." },
+                { typeof(ArgumentNullException), "Log file path is empty." },
+                { typeof(PathTooLongException), "Log file path is too long." },
+                { typeof(DirectoryNotFoundException), "Directory with log file cannot be found." },
+                { typeof(NotSupportedException), "I/O operation not supported." },
+                { typeof(IOException), "I/O operation error." },
+                { typeof(ObjectDisposedException), "Log file object was already disposed." },
+                { typeof(Exception), "Unknown error while writing log to file." }
+            };
+            _readLogExceptions = new Dictionary<Type, string>
+            {
+                { typeof(ArgumentException), "Invalid log file path." },
+                { typeof(ArgumentNullException), "Log file path is empty." },
+                { typeof(DirectoryNotFoundException), "Directory in log file path cannot be found." },
+                { typeof(FileNotFoundException), "Log file cannot be found." },
+                { typeof(IOException), "I/O operation error." },
+                { typeof(Exception), "Unknown error while reading log from file." }
+            };
             _filePath = ConfigurationManager.AppSettings["LogFilePath"];
             if (_filePath == null)
             {
@@ -40,15 +62,26 @@ namespace DotNetLog.Loggers
             }
         }
 
-        private List<ILogEntry> LogEntries { get { return (List<ILogEntry>) GetAllLogs(); } } 
+        private List<ILogEntry> LogEntries { get { return (List<ILogEntry>) GetAllLogs(); } }
+
+        private Dictionary<Type, string> _readLogExceptions;
+
+        private Dictionary<Type, string> _writeLogExceptions;
          
         private readonly string _filePath;
 
         public void Log(ILogEntry logEntry)
         {
-            using (var logFile = File.AppendText(_filePath))
+            try
             {
-                logFile.WriteLine(logEntry.ToString());
+                using (var logFile = File.AppendText(_filePath))
+                {
+                    logFile.WriteLine(logEntry.ToString());
+                }
+            }
+            catch (Exception e)
+            {
+                HandleExceptions(e, _writeLogExceptions);
             }
         }
 
@@ -67,16 +100,34 @@ namespace DotNetLog.Loggers
         public ICollection<ILogEntry> GetAllLogs()
         {
             List<ILogEntry> logEntries= new List<ILogEntry>();
-            using (var logFile = new StreamReader(_filePath))
+            try
             {
-                string line;
-                while ((line = logFile.ReadLine()) != null)
+                using (var logFile = new StreamReader(_filePath))
                 {
-                    logEntries.Add(new LogEntry(line));
+                    string line;
+                    while ((line = logFile.ReadLine()) != null)
+                    {
+                        logEntries.Add(new LogEntry(line));
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                HandleExceptions(e, _readLogExceptions);
             }
 
             return logEntries;
+        }
+
+        private void HandleExceptions(Exception e, Dictionary<Type, string> exceptions)
+        {
+            foreach (var logException in exceptions)
+            {
+                if (e.GetType() == logException.Key)
+                {
+                    throw new LoggingException(logException.Value, e);
+                }
+            }
         }
     }
 }
