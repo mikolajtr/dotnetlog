@@ -27,6 +27,7 @@ namespace DotNetLog.LogEntries
             LogTime = DateTime.Now;
             Message = message;
             LogType = logType;
+            LoggedException = String.Empty;
             _separator = GetLogSeparator();
         }
 
@@ -64,6 +65,34 @@ namespace DotNetLog.LogEntries
                 separator = "|";
             }
             return separator.Trim()[0];
+        }
+
+        public override bool Equals(object obj)
+        {
+            LogEntry e = obj as LogEntry;
+            if (e == null)
+            {
+                return false;
+            }
+
+            return (LogTime == e.LogTime) && (LogType == e.LogType) && (Message == e.Message) &&
+                   (LoggedException == e.LoggedException);
+        }
+
+        public bool Equals(LogEntry e)
+        {
+            if (e == null)
+            {
+                return false;
+            }
+
+            return (LogTime == e.LogTime) && (LogType == e.LogType) && (Message == e.Message) &&
+                   (LoggedException == e.LoggedException);
+        }
+
+        public override int GetHashCode()
+        {
+            return string.Concat(LogTime.ToString(), LogType, Message, LoggedException).GetHashCode();
         }
     }
 }
