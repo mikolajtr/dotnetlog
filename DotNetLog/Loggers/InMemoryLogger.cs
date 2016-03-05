@@ -10,6 +10,8 @@ namespace DotNetLog.Loggers
         private static volatile InMemoryLogger _instance;
         private static readonly object SyncRoot = new Object();
 
+        private static List<ILogEntry> LogEntries { get; } = new List<ILogEntry>();
+
         public static InMemoryLogger Instance
         {
             get
@@ -27,8 +29,6 @@ namespace DotNetLog.Loggers
                 return _instance;
             }
         }
-
-        private static List<ILogEntry> LogEntries { get; } = new List<ILogEntry>();
 
         private InMemoryLogger()
         {
