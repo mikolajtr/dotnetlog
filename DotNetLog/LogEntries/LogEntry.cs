@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Text.RegularExpressions;
 using DotNetLog.ILogEntries;
 
 namespace DotNetLog.LogEntries
@@ -15,8 +14,11 @@ namespace DotNetLog.LogEntries
 
         public string LoggedException { get; set; }
 
+        private readonly char _separator;
+
         public LogEntry(string record)
         {
+            _separator = GetLogSeparator();
             FromString(record);
         }
 
@@ -25,45 +27,43 @@ namespace DotNetLog.LogEntries
             LogTime = DateTime.Now;
             Message = message;
             LogType = logType;
+            _separator = GetLogSeparator();
         }
 
-        public LogEntry(string message, LogType logType, Exception exception)
+        public LogEntry(string message, LogType logType, Exception exception) : this(message, logType)
         {
-            LogTime = DateTime.Now;
-            Message = message;
-            LogType = logType;
             LoggedException = exception.ToString();
         }
 
         public override string ToString()
         {
-            string logPattern = ConfigurationManager.AppSettings["LogPattern"];
-            if (logPattern == null)
-            {
-                logPattern = "{0} | {1} | {2} | {3}";
-            }
-
-            return String.Format(logPattern, LogTime, LogType, Message, LoggedException);
+            return $"{LogTime} {_separator} {LogType} {_separator} {Message} {_separator} {LoggedException}";
         }
 
         private void FromString(string record)
         {
-            string pattern = ConfigurationManager.AppSettings["LogRegexPattern"];
-            if (pattern == null)
-            {
-                pattern = @"(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d) \| (\w*) \| (.*) \| (.*)";
-            }
+            Console.WriteLine(record);
+            string[] fields = record.Split(_separator);
 
-            Match match = Regex.Match(record, pattern);
-            DateTime logTime = DateTime.Parse(match.Groups[1].Value);
-            LogType logType = (LogType)Enum.Parse(typeof(LogType), match.Groups[2].Value);
-            string message = match.Groups[3].Value;
-            string loggedException = match.Groups[4].Value;
+            DateTime logTime = DateTime.Parse(fields[0].Trim());
+            LogType logType = (LogType)Enum.Parse(typeof(LogType), fields[1].Trim());
+            string message = fields[2].Trim();
+            string loggedException = fields[3].Trim();
 
             LogTime = logTime;
             LogType = logType;
             Message = message;
             LoggedException = loggedException;
+        }
+
+        private char GetLogSeparator()
+        {
+            string separator = ConfigurationManager.AppSettings["LogFieldSeparator"];
+            if (separator == null)
+            {
+                separator = "|";
+            }
+            return separator.Trim()[0];
         }
     }
 }
