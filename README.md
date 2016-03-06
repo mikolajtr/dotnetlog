@@ -18,13 +18,7 @@ There is `LogEntry` class that implements `ILogEntry`. `LogEntry` have three ove
  - `LogEntry(string message, LogType logType)` - creates `LogEntry` of the given type `logType` with `message`;
  - `LogEntry(string message, LogType logType, Exception exception)` - like the previous one; in addition saves exception type and message of `exception` argument. REMEMBER: do not fortget to rethrow exception after saving it in log.
 
-`LogEntry` need two settings in `App.config` file in your application:
- - `LogPattern` - the pattern for string representation for single log. Default pattern is "`{0} | {1} | {2} | {3}`", where:
-   + 0 - `LogTime`;
-   + 1 - `LogType`;
-   + 2 - `Message`;
-   + 3 - `Exception`;
- - `LogRegexPattern` - the regular expression pattern of log; needed to recreate `LogEntry` object from its text form. Default regex pattern is "`(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d) \| (\w*) \| (.*) \| (.*)`"
+Default log text format is `{LogTime} | {LogType} | {Message} | {LoggedException}`; `|` character is default fields separator. You may user other character as separator, to do it, set `LogFieldSeparator` value in your `App.config` file.
 
 For saving logs, there are two example implementations of `ILogger`:
  - `FileLogger` - saves given logs in file. Log file path should be saved in your application `App.config` file, under `LogFilePath` key. Default log file `log.txt` will be created in your app main directory;
@@ -32,7 +26,10 @@ For saving logs, there are two example implementations of `ILogger`:
 
 Both `FileLogger` and `InMemoryLogger` are singletons - there is only one instance of logger for application. To get to instance, you have to use `Instance` property of logger.
 
+There is also `LoggingException` class. Use it to throw exceptions inside your own logging class or to handle with logging errors.
+
 Example of using log system with `FileLogger` is within Sample console app in this solution. Run it or check example below:
+
     using System;
     using DotNetLog;
     using DotNetLog.ILoggers;
