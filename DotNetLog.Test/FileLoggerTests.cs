@@ -61,5 +61,14 @@ namespace DotNetLog.Test
             var lastHourErrors = _logger.GetLogsByTypeFromPeriod(LogType.Error, new TimeSpan(0, 1, 0, 0));
             Assert.True(testError.Equals(lastHourErrors.First()));
         }
+
+        [Test]
+        public void ErrorsOnlyTest()
+        {
+            var testError = new LogEntry("error!", LogType.Error, new Exception("test error")) { LogTime = _cleanDate };
+            _logger.Log(testError);
+            var errors = _logger.GetLogsByType(LogType.Error);
+            Assert.True(testError.Equals(errors.First()));
+        }
     }
 }

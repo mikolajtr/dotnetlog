@@ -9,6 +9,7 @@ namespace DotNetLog.ILoggers
         void Log(ILogEntry logEntry);
         ICollection<ILogEntry> GetLogsFromPeriod(TimeSpan timeSpan);
         ICollection<ILogEntry> GetLogsByTypeFromPeriod(LogType logType, TimeSpan timeSpan);
+        ICollection<ILogEntry> GetLogsByType(LogType logType);
         ICollection<ILogEntry> GetAllLogs();
     }
 }

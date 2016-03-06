@@ -94,6 +94,11 @@ namespace DotNetLog.Loggers
                 .FindAll(x => (DateTime.Now - x.LogTime) <= timeSpan);
         }
 
+        public ICollection<ILogEntry> GetLogsByType(LogType logType)
+        {
+            return LogEntries.FindAll(x => x.LogType == logType);
+        }
+
         public ICollection<ILogEntry> GetAllLogs()
         {
             List<ILogEntry> logEntries= new List<ILogEntry>();
