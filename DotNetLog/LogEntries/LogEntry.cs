@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using DotNetLog.Exceptions;
 using DotNetLog.ILogEntries;
 
 namespace DotNetLog.LogEntries
@@ -27,7 +28,7 @@ namespace DotNetLog.LogEntries
             LogTime = DateTime.Now;
             Message = message;
             LogType = logType;
-            LoggedException = String.Empty;
+            LoggedException = string.Empty;
             _separator = GetLogSeparator();
         }
 
@@ -43,13 +44,47 @@ namespace DotNetLog.LogEntries
 
         private void FromString(string record)
         {
-            Console.WriteLine(record);
             string[] fields = record.Split(_separator);
+            DateTime logTime;
+            string message;
+            string loggedException;
+            LogType logType;
 
-            DateTime logTime = DateTime.Parse(fields[0].Trim());
-            LogType logType = (LogType)Enum.Parse(typeof(LogType), fields[1].Trim());
-            string message = fields[2].Trim();
-            string loggedException = fields[3].Trim();
+            try
+            {
+                logTime = DateTime.Parse(fields[0].Trim());
+            }
+            catch (FormatException e)
+            {
+                throw new LoggingException("Incorrect DateTime format.", e);
+            }
+            catch (Exception e)
+            {
+                throw new LoggingException("Incorrect log format.", e);
+            }
+
+            try
+            {
+                logType = (LogType) Enum.Parse(typeof (LogType), fields[1].Trim());
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new LoggingException("Incorrect log format.", e);
+            }
+            catch (Exception e)
+            {
+                throw new LoggingException("Incorrect log type.", e);
+            }
+
+            try
+            {
+                message = fields[2].Trim();
+                loggedException = fields[3].Trim();
+            }
+            catch (Exception e)
+            {
+                throw new LoggingException("Incorrect log format", e);
+            }
 
             LogTime = logTime;
             LogType = logType;
