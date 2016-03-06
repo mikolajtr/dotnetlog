@@ -125,6 +125,7 @@ namespace DotNetLog.Loggers
                     throw new LoggingException(logException.Value, e);
                 }
             }
+            throw new LoggingException("Unexpected error while I/O log operation.");
         }
     }
 }
