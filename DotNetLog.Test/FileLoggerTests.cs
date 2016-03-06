@@ -18,8 +18,7 @@ namespace DotNetLog.Test
         [SetUp]
         public void SetUp()
         {
-            ConfigurationManager.AppSettings["LogFilePath"] = "log_test.txt";
-
+            ConfigurationManager.AppSettings["LogFilePath"] = $"{Guid.NewGuid()}.txt"; // generate test log file with random GUID as file name
             _logger = FileLogger.Instance;
             var now = DateTime.Now;
             _cleanDate = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second); // mocking datetime to avoid trouble with miliseconds comparing
