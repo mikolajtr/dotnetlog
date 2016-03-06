@@ -32,6 +32,8 @@ For saving logs, there are two example implementations of `ILogger`:
 
 Both `FileLogger` and `InMemoryLogger` are singletons - there is only one instance of logger for application. To get to instance, you have to use `Instance` property of logger.
 
+There is also `LoggingException` class. Use it to throw exceptions inside your own logging class or to handle with logging errors.
+
 Example of using log system with `FileLogger` is within Sample console app in this solution. Run it or check example below:
     using System;
     using DotNetLog;
